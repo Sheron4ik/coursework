@@ -11,3 +11,7 @@ StatisticsWindow::StatisticsWindow(QWidget *parent) :
 StatisticsWindow::~StatisticsWindow() {
     delete ui;
 }
+
+void StatisticsWindow::on_back_clicked() {
+    emit openMainWindow();
+}

@@ -14,6 +14,12 @@ public:
     explicit ShoppingWindow(QWidget *parent = nullptr);
     ~ShoppingWindow();
 
+signals:
+    void openMainWindow();
+
+private slots:
+    void on_back_clicked();
+
 private:
     Ui::ShoppingWindow *ui;
 };

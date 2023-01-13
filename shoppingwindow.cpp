@@ -11,3 +11,7 @@ ShoppingWindow::ShoppingWindow(QWidget *parent) :
 ShoppingWindow::~ShoppingWindow() {
     delete ui;
 }
+
+void ShoppingWindow::on_back_clicked() {
+    emit openMainWindow();
+}

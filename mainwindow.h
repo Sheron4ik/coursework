@@ -2,6 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QWidget>
+#include <QMessageBox>
+
+#include "shoppingwindow.h"
+#include "statisticswindow.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -14,7 +18,15 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void on_help_clicked();
+    void on_buy_clicked();
+    void on_statistics_clicked();
+    void backMainWindow();
+
 private:
     Ui::MainWindow *ui;
+    ShoppingWindow *shoppingWindow;
+    StatisticsWindow *statisticsWindow;
 };
 #endif // MAINWINDOW_H

@@ -14,6 +14,12 @@ public:
     explicit StatisticsWindow(QWidget *parent = nullptr);
     ~StatisticsWindow();
 
+signals:
+    void openMainWindow();
+
+private slots:
+    void on_back_clicked();
+
 private:
     Ui::StatisticsWindow *ui;
 };
