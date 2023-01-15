@@ -2,6 +2,7 @@
 #define SHOPPINGWINDOW_H
 
 #include <QWidget>
+#include <QMessageBox>
 
 namespace Ui {
 class ShoppingWindow;
@@ -19,6 +20,7 @@ signals:
 
 private slots:
     void on_back_clicked();
+    void on_add_clicked();
 
 private:
     Ui::ShoppingWindow *ui;

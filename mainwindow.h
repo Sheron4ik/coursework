@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QWidget>
-#include <QMessageBox>
+//#include <QMessageBox>
 
 #include "shoppingwindow.h"
 #include "statisticswindow.h"

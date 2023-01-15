@@ -19,7 +19,7 @@
      <item>
       <widget class="QPushButton" name="back">
        <property name="styleSheet">
-        <string notr="true">font: 11pt &quot;Segoe UI&quot;;</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string>Назад</string>
@@ -42,7 +42,7 @@
      <item>
       <widget class="QLabel" name="windowName">
        <property name="styleSheet">
-        <string notr="true">font: 11pt &quot;Segoe UI&quot;;</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string>Статистика</string>
@@ -68,7 +68,7 @@
      <item>
       <widget class="QPushButton" name="settings">
        <property name="styleSheet">
-        <string notr="true">font: 11pt &quot;Segoe UI&quot;;</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string>Настройки</string>

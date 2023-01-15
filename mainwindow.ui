@@ -32,7 +32,7 @@
      <item>
       <widget class="QPushButton" name="help">
        <property name="styleSheet">
-        <string notr="true">font: 11pt &quot;Segoe UI&quot;;</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string>Помощь</string>
@@ -59,7 +59,7 @@
      <item>
       <widget class="QPushButton" name="statistics">
        <property name="styleSheet">
-        <string notr="true">font: 11pt &quot;Segoe UI&quot;;</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string>Статистика</string>
@@ -69,7 +69,7 @@
      <item>
       <widget class="QPushButton" name="buy">
        <property name="styleSheet">
-        <string notr="true">font: 11pt &quot;Segoe UI&quot;;</string>
+        <string notr="true"/>
        </property>
        <property name="text">
         <string>Новая покупка</string>
