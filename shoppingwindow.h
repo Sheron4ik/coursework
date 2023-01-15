@@ -14,6 +14,7 @@ class ShoppingWindow : public QWidget {
 public:
     explicit ShoppingWindow(QWidget *parent = nullptr);
     ~ShoppingWindow();
+    bool isFieldsEmpty();
 
 signals:
     void openMainWindow();
@@ -21,6 +22,9 @@ signals:
 private slots:
     void on_back_clicked();
     void on_add_clicked();
+    void on_finish_clicked();
+    void on_price_valueChanged(double arg1);
+    void on_quantity_valueChanged(int arg1);
 
 private:
     Ui::ShoppingWindow *ui;
