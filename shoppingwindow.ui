@@ -75,17 +75,45 @@
     </layout>
    </item>
    <item>
-    <widget class="QTextEdit" name="purchase"/>
+    <widget class="QTextEdit" name="purchase">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QLineEdit" name="productName"/>
+      <widget class="QLineEdit" name="productName">
+       <property name="text">
+        <string>название продукта...</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="category">
+       <property name="editable">
+        <bool>true</bool>
+       </property>
+       <property name="currentText">
+        <string>категория продукта...</string>
+       </property>
+      </widget>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QComboBox" name="category"/>
+        <widget class="QLabel" name="money">
+         <property name="maximumSize">
+          <size>
+           <width>30</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>руб:</string>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QDoubleSpinBox" name="price">
@@ -98,30 +126,56 @@
         </widget>
        </item>
        <item>
-        <widget class="QSpinBox" name="quantity">
-         <property name="maximum">
-          <number>999999999</number>
+        <widget class="QLabel" name="amount">
+         <property name="maximumSize">
+          <size>
+           <width>50</width>
+           <height>25</height>
+          </size>
          </property>
-         <property name="value">
-          <number>1</number>
+         <property name="text">
+          <string>кол-во:</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="total">
-         <property name="text">
-          <string>0,01</string>
+        <widget class="QDoubleSpinBox" name="quantity">
+         <property name="decimals">
+          <number>3</number>
+         </property>
+         <property name="maximum">
+          <double>999999999.998999953269958</double>
+         </property>
+         <property name="value">
+          <double>1.000000000000000</double>
          </property>
         </widget>
        </item>
       </layout>
      </item>
      <item>
-      <widget class="QPushButton" name="add">
-       <property name="text">
-        <string>Добавить</string>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <item>
+        <widget class="QLabel" name="total">
+         <property name="maximumSize">
+          <size>
+           <width>300</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>ИТОГО: 0,01</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="add">
+         <property name="text">
+          <string>Добавить</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item>
       <widget class="QPushButton" name="finish">

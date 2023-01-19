@@ -7,9 +7,12 @@ ShoppingWindow::ShoppingWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->category->setEditable(true);
+    //ui->category->setEditable(true);
 
-    ui->purchase->setReadOnly(true);
+    //ui->purchase->setReadOnly(true);
+
+    connect(ui->price, SIGNAL(valueChanged(double)), this, SLOT(totalChanged()));
+    connect(ui->quantity, SIGNAL(valueChanged(double)), this, SLOT(totalChanged()));
 }
 
 ShoppingWindow::~ShoppingWindow() {
@@ -17,8 +20,8 @@ ShoppingWindow::~ShoppingWindow() {
 }
 
 bool ShoppingWindow::isFieldsEmpty() {
-    if (ui->productName->displayText().isEmpty() ||
-        ui->category->currentText().isEmpty() ||
+    if (ui->productName->displayText() == "название продукта..." ||
+        ui->category->currentText() == "категория продукта..." ||
         ui->price->value() == 0.0 ||
         ui->quantity->value() == 0)
         return true;
@@ -26,7 +29,10 @@ bool ShoppingWindow::isFieldsEmpty() {
 }
 
 void ShoppingWindow::on_back_clicked() {
-    emit openMainWindow();
+    if (ui->purchase->toPlainText().isEmpty())
+        emit openMainWindow();
+    else
+        QMessageBox::critical(this, "Ошибка", "Завершите покупку!");
 }
 
 void ShoppingWindow::on_add_clicked() {
@@ -35,25 +41,23 @@ void ShoppingWindow::on_add_clicked() {
         if (isFieldsEmpty())
             QMessageBox::critical(this, "Ошибка", "Данные некорректны!");
         else
-            QMessageBox::information(this, "Да", "Да");
+            ui->purchase->setText(ui->purchase->toPlainText() + ui->productName->displayText() + '\n'
+                                  + ui->price->text() + "\tx" + ui->quantity->text() + '\t'
+                                  + ui->total->text() + "\n\n");
     }
 }
 
 void ShoppingWindow::on_finish_clicked() {
     QMessageBox::StandardButton answer = QMessageBox::question(this, "Завершить", "Вы уверены, что всё добавили?");
     if (answer == QMessageBox::Yes) {
-        QMessageBox::information(this, "Да", "Да");
-    } else {
-        QMessageBox::information(this, "Нет", "Нет");
+        if (ui->purchase->toPlainText().isEmpty())
+            QMessageBox::critical(this, "Ошибка", "Ничего не добавлено!");
+        else
+            emit openMainWindow();
     }
 }
 
-void ShoppingWindow::on_price_valueChanged(double arg1) {
-    double ans = arg1 * double(ui->quantity->value());
-    ui->total->setText(QString::number(ans, 'g', 8));
-}
-
-void ShoppingWindow::on_quantity_valueChanged(int arg1) {
-    double ans = double(arg1) * ui->price->value();
-    ui->total->setText(QString::number(ans, 'g', 8));
+void ShoppingWindow::totalChanged() {
+    double ans = ui->price->value() * ui->quantity->value();
+    ui->total->setText("ИТОГО: " + QString::number(ans, 'g', 8));
 }
