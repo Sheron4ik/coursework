@@ -2,7 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QWidget>
-#include <QtSql>
+#include <database.h>
+//#include <QtSql>
+//#include <QFileInfo>
 //#include <QMessageBox>
 
 #include "shoppingwindow.h"
@@ -29,6 +31,11 @@ private:
     Ui::MainWindow *ui;
     ShoppingWindow *shoppingWindow;
     StatisticsWindow *statisticsWindow;
-    QSqlDatabase DBpurchases;
+    Database *DBpurchases;
+    /*QSqlDatabase DBpurchases;
+
+    bool createDB();
+    bool addCategoryIntoDB(const QString& category);
+    void selectCategories();*/
 };
 #endif // MAINWINDOW_H

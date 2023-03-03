@@ -13,38 +13,31 @@ MainWindow::MainWindow(QWidget *parent) :
     statisticsWindow = new StatisticsWindow();
     connect(statisticsWindow, SIGNAL(openMainWindow()), this, SLOT(backMainWindow()));
 
-    DBpurchases = QSqlDatabase::addDatabase("QSQLITE");
-    if (!QFile::exists(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/dbPurchases")) {
-        DBpurchases.setDatabaseName(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/dbPurchases");
-        QSqlQuery query(DBpurchases);
-        if( !query.exec(
-                        "CREATE TABLE Purchases("
-                        "   category TEXT PRIMARY KEY NOT NULL,"
-                        "   date DATE NOT NULL"
-                        "   price DECIMAL"
-                        ")"
-                        )
-            ) {
-                QMessageBox::critical(this, "Ошибка", "что-то не получилось!");
-            }
+    /*if (!QFile::exists(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/dbPurchases")) {
+        QMessageBox::information(this, "exists false", QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/dbPurchases");
     } else {
-        DBpurchases.setDatabaseName(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/dbPurchases");
-        QMessageBox::critical(this, "Ошибка", "БД уже существует!");
-        //QFile::remove(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/dbPurchases");
+        QMessageBox::information(this, "", "exists true");
     }
-    if (!DBpurchases.open()) {
-        QMessageBox::critical(this, "Ошибка", "Не удалось подключиться к БД!");
+
+    if (!QFileInfo::exists(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/dbPurchases")) {
+        QMessageBox::information(this, "", "БД не существует!)");
     } else {
-        QMessageBox::information(this, "Успешно", "Подключение к БД настроено)");
-    }
+        QMessageBox::critical(this, "", "БД уже существует!");
+    }*/
+
+    DBpurchases = new Database();
+    DBpurchases->createDB();
+    /*QStringList categoies = {"Продукты", "Книги", "Аптеки", "Электроника", "Украшения"};
+    DBpurchases->addCategories({"Продукты", "Книги", "Аптеки", "Электроника", "Украшения"});
+    DBpurchases->addCategory("Канцелярия");*/
+    DBpurchases->getCategories();
 }
 
 MainWindow::~MainWindow() {
     delete ui;
     delete shoppingWindow;
     delete statisticsWindow;
-    DBpurchases.close();
-    //QFile::remove(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/dbPurchases");
+    delete DBpurchases;
 }
 
 void MainWindow::on_help_clicked() {
