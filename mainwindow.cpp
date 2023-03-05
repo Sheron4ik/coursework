@@ -7,6 +7,14 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    DBmain = new Database();
+    DBmain->createDB();
+    if (DBmain->isCategoryEmpty()) {
+        DBmain->addCategories({"Продукты", "Книги", "Аптеки", "Электроника", "Украшения", "Канцелярия"});
+    }
+    //delete DBmain;
+    /*DBpurchases->getCategories();*/
+
     shoppingWindow = new ShoppingWindow();
     connect(shoppingWindow, SIGNAL(openMainWindow()), this, SLOT(backMainWindow()));
 
@@ -25,19 +33,15 @@ MainWindow::MainWindow(QWidget *parent) :
         QMessageBox::critical(this, "", "БД уже существует!");
     }*/
 
-    DBpurchases = new Database();
-    DBpurchases->createDB();
-    /*QStringList categoies = {"Продукты", "Книги", "Аптеки", "Электроника", "Украшения"};
-    DBpurchases->addCategories({"Продукты", "Книги", "Аптеки", "Электроника", "Украшения"});
-    DBpurchases->addCategory("Канцелярия");*/
-    DBpurchases->getCategories();
+    qDebug() << QDate::currentDate().toString("yyyy.MM.dd");
 }
 
 MainWindow::~MainWindow() {
     delete ui;
     delete shoppingWindow;
     delete statisticsWindow;
-    delete DBpurchases;
+    delete DBmain;
+    QFile::remove(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/dbPurchases");
 }
 
 void MainWindow::on_help_clicked() {

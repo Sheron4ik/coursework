@@ -31,11 +31,6 @@ private:
     Ui::MainWindow *ui;
     ShoppingWindow *shoppingWindow;
     StatisticsWindow *statisticsWindow;
-    Database *DBpurchases;
-    /*QSqlDatabase DBpurchases;
-
-    bool createDB();
-    bool addCategoryIntoDB(const QString& category);
-    void selectCategories();*/
+    Database *DBmain;
 };
 #endif // MAINWINDOW_H

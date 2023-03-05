@@ -12,7 +12,6 @@ Database::Database() {
 
 Database::~Database() {
     DB.close();
-    QFile::remove(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/dbPurchases");
     qDebug() << "SUCCESS closing";
 }
 
@@ -55,6 +54,13 @@ void Database::addCategory(const QString& category) {
         qDebug() << "SUCCESS add category " << category;
     }
 }
+/**/
+void Database::addPurchase(const QString& category, const QString& date, const QString& price) {
+    QSqlQuery query(DB);
+    query.prepare(
+                    "INSERT INTO Purchases"
+                );
+}
 
 void Database::addCategories(const QStringList& categories) {
     foreach (const QString category, categories) {
@@ -62,18 +68,25 @@ void Database::addCategories(const QStringList& categories) {
     }
 }
 
-void Database::getCategories() {
+QStringList* Database::getCategories() {
     QSqlQuery query(DB);
-    if (!query.exec(
+    query.exec(
                     "SELECT * FROM Category"
-                )) {
-        qDebug() << "ERROR selection Category: " << DB.lastError().text();
-    } else {
-        qDebug() << "SUCCESS selection Category";
-        const int id = query.record().indexOf("id");
-        const int category = query.record().indexOf("category");
-        while (query.next()) {
-            qDebug() << query.value(id).toUInt() << query.value(category).toString();
-        }
+                );
+    QStringList *categories = new QStringList();
+    const int id = query.record().indexOf("id");
+    const int category = query.record().indexOf("category");
+    while (query.next()) {
+        *categories << query.value(category).toString();
+        qDebug() << query.value(id).toUInt() << query.value(category).toString();
     }
+    return categories;
+}
+
+bool Database::isCategoryEmpty() {
+    QSqlQuery query(DB);
+    query.exec(
+                    "SELECT * FROM Category"
+                );
+    return !query.next();
 }

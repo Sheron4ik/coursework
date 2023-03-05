@@ -2,6 +2,7 @@
 #define SHOPPINGWINDOW_H
 
 #include <QWidget>
+#include <database.h>
 #include <QMessageBox>
 
 namespace Ui {
@@ -28,6 +29,7 @@ private slots:
 private:
     Ui::ShoppingWindow *ui;
     quint8 numberOfPurchases;
+    Database *DBshop;
 };
 
 #endif // SHOPPINGWINDOW_H

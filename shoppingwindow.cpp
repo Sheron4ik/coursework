@@ -8,6 +8,10 @@ ShoppingWindow::ShoppingWindow(QWidget *parent) :
     ui->setupUi(this);
 
     //ui->category->setEditable(true);
+    DBshop = new Database();
+    ui->category->addItem("категория продукта...");
+    ui->category->addItems(*DBshop->getCategories());
+    //delete DBshop;
 
     //ui->purchase->setReadOnly(true);
 
@@ -17,6 +21,7 @@ ShoppingWindow::ShoppingWindow(QWidget *parent) :
 
 ShoppingWindow::~ShoppingWindow() {
     delete ui;
+    delete DBshop;
 }
 
 bool ShoppingWindow::isFieldsEmpty() {
@@ -38,12 +43,13 @@ void ShoppingWindow::on_back_clicked() {
 void ShoppingWindow::on_add_clicked() {
     QMessageBox::StandardButton answer = QMessageBox::question(this, "Добавить", "Вы уверены, что данные корректны?");
     if (answer == QMessageBox::Yes) {
-        if (isFieldsEmpty())
+        if (isFieldsEmpty()) {
             QMessageBox::critical(this, "Ошибка", "Данные некорректны!");
-        else
-            ui->purchase->setText(ui->purchase->toPlainText() + ui->productName->displayText() + '\n'
-                                  + ui->price->text() + "\tx" + ui->quantity->text() + '\t'
-                                  + ui->total->text() + "\n\n");
+        } else {
+            ui->purchase->setText(ui->productName->displayText() + '\n'
+                                  + ui->price->text() + "\tx" + ui->quantity->text() + '\t' + ui->total->text()
+                                  + "\n\n" + ui->purchase->toPlainText());
+        }
     }
 }
 
