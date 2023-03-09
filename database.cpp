@@ -54,18 +54,40 @@ void Database::addCategory(const QString& category) {
         qDebug() << "SUCCESS add category " << category;
     }
 }
-/**/
-void Database::addPurchase(const QString& category, const QString& date, const QString& price) {
+
+void Database::addPurchase(const QString& category, const QString& date, const double price) {
     QSqlQuery query(DB);
     query.prepare(
-                    "INSERT INTO Purchases"
+                    "INSERT INTO Purchases (id_category, date, price)"
+                    "   VALUES (:id_category, :date, :price)"
                 );
+    query.bindValue(":id_category", this->getIDCategory(category));
+    query.bindValue(":date", date);
+    query.bindValue(":price", price);
+    if (!query.exec()) {
+        qDebug() << "ERROR add purchase " << category << date << price << ": " << DB.lastError().text();
+    } else {
+        qDebug() << "SUCCESS add purchase " << category << date << price;
+    }
 }
 
 void Database::addCategories(const QStringList& categories) {
     foreach (const QString category, categories) {
         addCategory(category);
     }
+}
+
+qulonglong Database::getIDCategory(const QString& category) {
+    QSqlQuery query(DB);
+    query.prepare(
+                    "SELECT id FROM Category"
+                    "   WHERE category = (:category)"
+                );
+    query.bindValue(":category", category);
+    query.exec();
+    const int id = query.record().indexOf("id");
+    query.next();
+    return query.value(id).toULongLong();
 }
 
 QStringList* Database::getCategories() {
@@ -89,4 +111,19 @@ bool Database::isCategoryEmpty() {
                     "SELECT * FROM Category"
                 );
     return !query.next();
+}
+
+void Database::getPurchases() {
+    QSqlQuery query(DB);
+    query.exec(
+                    "SELECT * FROM Purchases"
+                );
+    const int id = query.record().indexOf("id_purchase");
+    const int id_category = query.record().indexOf("id_category");
+    const int date = query.record().indexOf("date");
+    const int price = query.record().indexOf("price");
+    while (query.next()) {
+        qDebug() << query.value(id).toULongLong() << query.value(id_category).toULongLong() <<
+                    query.value(date).toString() << query.value(price).toDouble();
+    }
 }

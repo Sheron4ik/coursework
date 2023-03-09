@@ -11,10 +11,12 @@ public:
 
     void createDB();
     void addCategory(const QString& category);
-    void addPurchase(const QString& category, const QString& date, const QString& price);
+    void addPurchase(const QString& category, const QString& date, const double price);
     void addCategories(const QStringList& categories);
+    qulonglong getIDCategory(const QString& category);
     QStringList* getCategories();
     bool isCategoryEmpty();
+    void getPurchases();
 };
 
 #endif // DATABASE_H

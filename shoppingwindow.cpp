@@ -49,6 +49,7 @@ void ShoppingWindow::on_add_clicked() {
             ui->purchase->setText(ui->productName->displayText() + '\n'
                                   + ui->price->text() + "\tx" + ui->quantity->text() + '\t' + ui->total->text()
                                   + "\n\n" + ui->purchase->toPlainText());
+            DBshop->addPurchase(ui->category->currentText(), QDate::currentDate().toString("yyyy.MM.dd"), ui->total->text().section(' ', 1, 1).toDouble());
         }
     }
 }

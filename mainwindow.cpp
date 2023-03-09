@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     if (DBmain->isCategoryEmpty()) {
         DBmain->addCategories({"Продукты", "Книги", "Аптеки", "Электроника", "Украшения", "Канцелярия"});
     }
+    //qDebug() << DBmain->getIDCategory("Украшения");
     //delete DBmain;
     /*DBpurchases->getCategories();*/
 
@@ -66,4 +67,5 @@ void MainWindow::backMainWindow() {
     this->setVisible(true);
     statisticsWindow->setVisible(false);
     shoppingWindow->setVisible(false);
+    DBmain->getPurchases();
 }
