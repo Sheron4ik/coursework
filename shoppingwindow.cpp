@@ -57,10 +57,12 @@ void ShoppingWindow::on_add_clicked() {
 void ShoppingWindow::on_finish_clicked() {
     QMessageBox::StandardButton answer = QMessageBox::question(this, "Завершить", "Вы уверены, что всё добавили?");
     if (answer == QMessageBox::Yes) {
-        if (ui->purchase->toPlainText().isEmpty())
+        if (ui->purchase->toPlainText().isEmpty()) {
             QMessageBox::critical(this, "Ошибка", "Ничего не добавлено!");
-        else
+        } else {
+            ui->purchase->clear();
             emit openMainWindow();
+        }
     }
 }
 

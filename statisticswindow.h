@@ -2,6 +2,8 @@
 #define STATISTICSWINDOW_H
 
 #include <QWidget>
+#include <database.h>
+#include <QtCharts>
 
 namespace Ui {
 class StatisticsWindow;
@@ -13,6 +15,7 @@ class StatisticsWindow : public QWidget {
 public:
     explicit StatisticsWindow(QWidget *parent = nullptr);
     ~StatisticsWindow();
+    void showStatistic();
 
 signals:
     void openMainWindow();
@@ -22,6 +25,11 @@ private slots:
 
 private:
     Ui::StatisticsWindow *ui;
+    Database *DBstatistic;
+
+    /*QPieSeries *series;
+    QChart *chart;
+    QChartView *view;*/
 };
 
 #endif // STATISTICSWINDOW_H

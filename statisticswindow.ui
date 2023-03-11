@@ -78,6 +78,17 @@
     </layout>
    </item>
    <item>
+    <widget class="QFrame" name="graph">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>450</height>
+      </size>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2"/>
+    </widget>
+   </item>
+   <item>
     <spacer name="verticalSpacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -85,7 +96,7 @@
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
-       <height>537</height>
+       <height>80</height>
       </size>
      </property>
     </spacer>

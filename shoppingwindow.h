@@ -28,7 +28,7 @@ private slots:
 
 private:
     Ui::ShoppingWindow *ui;
-    quint8 numberOfPurchases;
+//    quint8 numberOfPurchases;
     Database *DBshop;
 };
 

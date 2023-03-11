@@ -16,7 +16,8 @@ public:
     qulonglong getIDCategory(const QString& category);
     QStringList* getCategories();
     bool isCategoryEmpty();
-    void getPurchases();
+    void getAllPurchases();
+    QHash<QString, double> getPurchasesForStatistics();
 };
 
 #endif // DATABASE_H

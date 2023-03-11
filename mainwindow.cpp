@@ -10,11 +10,8 @@ MainWindow::MainWindow(QWidget *parent) :
     DBmain = new Database();
     DBmain->createDB();
     if (DBmain->isCategoryEmpty()) {
-        DBmain->addCategories({"Продукты", "Книги", "Аптеки", "Электроника", "Украшения", "Канцелярия"});
+        DBmain->addCategories({"Продукты", "Книги", "Аптеки", "Электроника", "Украшения", "Канцелярия", "Алкоголь"});
     }
-    //qDebug() << DBmain->getIDCategory("Украшения");
-    //delete DBmain;
-    /*DBpurchases->getCategories();*/
 
     shoppingWindow = new ShoppingWindow();
     connect(shoppingWindow, SIGNAL(openMainWindow()), this, SLOT(backMainWindow()));
@@ -35,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
     }*/
 
     qDebug() << QDate::currentDate().toString("yyyy.MM.dd");
+    qDebug() << QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 }
 
 MainWindow::~MainWindow() {
@@ -42,7 +40,7 @@ MainWindow::~MainWindow() {
     delete shoppingWindow;
     delete statisticsWindow;
     delete DBmain;
-    QFile::remove(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/dbPurchases");
+    //QFile::remove(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/dbPurchases");
 }
 
 void MainWindow::on_help_clicked() {
@@ -61,11 +59,12 @@ void MainWindow::on_buy_clicked() {
 void MainWindow::on_statistics_clicked() {
     statisticsWindow->show();
     this->setVisible(false);
+    statisticsWindow->showStatistic();
 }
 
 void MainWindow::backMainWindow() {
     this->setVisible(true);
     statisticsWindow->setVisible(false);
     shoppingWindow->setVisible(false);
-    DBmain->getPurchases();
+    DBmain->getAllPurchases();
 }

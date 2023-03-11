@@ -8,6 +8,12 @@ Database::Database() {
     } else {
         qDebug() << "SUCCESS connection";
     }
+    QSqlQuery query(DB);
+    if (!query.exec("PRAGMA foreign_keys = ON")) {
+        qDebug() << "ERROR pragma: " << DB.lastError().text();
+    } else {
+        qDebug() << "SUCCESS pragma";
+    }
 }
 
 Database::~Database() {
@@ -22,7 +28,8 @@ void Database::createDB() {
                     "   id_purchase INTEGER PRIMARY KEY,"
                     "   id_category INTEGER NOT NULL,"
                     "   date        DATE    NOT NULL,"
-                    "   price       DECIMAL NOT NULL"
+                    "   price       DECIMAL NOT NULL,"
+                    "FOREIGN KEY (id_category) REFERENCES Category(id)"
                     ")"
                 )) {
         qDebug() << "ERROR creation Purchases: " << DB.lastError().text();
@@ -113,7 +120,7 @@ bool Database::isCategoryEmpty() {
     return !query.next();
 }
 
-void Database::getPurchases() {
+void Database::getAllPurchases() {
     QSqlQuery query(DB);
     query.exec(
                     "SELECT * FROM Purchases"
@@ -127,3 +134,34 @@ void Database::getPurchases() {
                     query.value(date).toString() << query.value(price).toDouble();
     }
 }
+
+QHash<QString, double> Database::getPurchasesForStatistics() {
+    QHash<QString, double> ans;
+    QSqlQuery query(DB);
+    if (!query.exec(
+                    "SELECT Category.category, SUM(Purchases.price) FROM Purchases, Category"
+                    "   WHERE (Category.id = Purchases.id_category)"
+                    "GROUP BY Purchases.id_category"
+                )) {
+        qDebug() << "ERROR select:" << DB.lastError().text();
+    } else {
+        qDebug() << "SUCCESS select";
+        while (query.next()) {
+            qDebug() << query.value(0).toString() << query.value(1).toDouble();
+            ans.insert(query.value(0).toString(), query.value(1).toDouble());
+        }
+    }
+    return ans;
+}
+
+/*
+    "CREATE TABLE IF NOT EXISTS Purchases ("
+    "   id_purchase INTEGER PRIMARY KEY,"
+    "   id_category INTEGER NOT NULL,"
+    "   date        DATE    NOT NULL,"
+    "   price       DECIMAL NOT NULL,"
+
+    "CREATE TABLE IF NOT EXISTS Category ("
+    "   id          INTEGER PRIMARY KEY,"
+    "   category    TEXT    UNIQUE"
+*/
