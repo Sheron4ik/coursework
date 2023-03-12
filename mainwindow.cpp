@@ -57,9 +57,9 @@ void MainWindow::on_buy_clicked() {
 }
 
 void MainWindow::on_statistics_clicked() {
+    statisticsWindow->showStatistic();
     statisticsWindow->show();
     this->setVisible(false);
-    statisticsWindow->showStatistic();
 }
 
 void MainWindow::backMainWindow() {
