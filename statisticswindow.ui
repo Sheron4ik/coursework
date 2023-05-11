@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>667</height>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
@@ -82,24 +82,11 @@
      <property name="minimumSize">
       <size>
        <width>0</width>
-       <height>500</height>
+       <height>540</height>
       </size>
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_2"/>
     </widget>
-   </item>
-   <item>
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>80</height>
-      </size>
-     </property>
-    </spacer>
    </item>
   </layout>
  </widget>

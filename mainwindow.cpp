@@ -11,6 +11,15 @@ MainWindow::MainWindow(QWidget *parent) :
     DBmain->createDB();
     if (DBmain->isCategoryEmpty()) {
         DBmain->addCategories({"Продукты", "Книги", "Аптеки", "Электроника", "Украшения", "Канцелярия", "Алкоголь"});
+        DBmain->addGoods("Хлеб", 1);
+        DBmain->addGoods("Война и Мир", 2);
+        DBmain->addGoods("Аскорбинка", 3);
+        DBmain->addGoods("Арпефлю", 3);
+        DBmain->addGoods("Серьги", 5);
+        DBmain->addGoods("Ручка", 6);
+        DBmain->addGoods("Карандаш", 6);
+        DBmain->addGoods("Ластик", 6);
+        DBmain->addGoods("Жигулевское", 7);
     }
 
     shoppingWindow = new ShoppingWindow();
@@ -40,6 +49,7 @@ MainWindow::~MainWindow() {
     delete shoppingWindow;
     delete statisticsWindow;
     delete DBmain;
+    qDebug() << QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     //QFile::remove(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/dbPurchases");
 }
 

@@ -15,21 +15,25 @@ class StatisticsWindow : public QWidget {
 public:
     explicit StatisticsWindow(QWidget *parent = nullptr);
     ~StatisticsWindow();
-    void showStatistic();
 
 signals:
     void openMainWindow();
 
+public slots:
+    void showStatistic();
+
 private slots:
     void on_back_clicked();
+    //void showStatistic();
+    void showCategoryStatistic(QPieSlice* seriesOfCategory);
 
 private:
     Ui::StatisticsWindow *ui;
     Database *DBstatistic;
 
-    /*QPieSeries *series;
+    QPieSeries *series;
     QChart *chart;
-    QChartView *view;*/
+    QChartView *view;
 };
 
 #endif // STATISTICSWINDOW_H

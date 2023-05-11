@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <database.h>
 #include <QMessageBox>
+#include <QCompleter>
 
 namespace Ui {
 class ShoppingWindow;
@@ -25,11 +26,13 @@ private slots:
     void on_add_clicked();
     void on_finish_clicked();
     void totalChanged();
+    void on_category_currentTextChanged(const QString &category);
 
 private:
     Ui::ShoppingWindow *ui;
 //    quint8 numberOfPurchases;
     Database *DBshop;
+    QCompleter *productCompleter;
 };
 
 #endif // SHOPPINGWINDOW_H
