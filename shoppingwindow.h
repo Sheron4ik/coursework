@@ -14,12 +14,13 @@ class ShoppingWindow : public QWidget {
     Q_OBJECT
 
 public:
-    explicit ShoppingWindow(QWidget *parent = nullptr);
+    explicit ShoppingWindow(Database *DB, QWidget *parent = nullptr);
     ~ShoppingWindow();
     bool isFieldsEmpty();
+    //QPushButton *getStatisticsButton();
 
 signals:
-    void openMainWindow();
+    void openStatisticsWindow();
 
 private slots:
     void on_back_clicked();

@@ -24,7 +24,7 @@
           <string notr="true"/>
          </property>
          <property name="text">
-          <string>Назад</string>
+          <string>К статистике</string>
          </property>
         </widget>
        </item>

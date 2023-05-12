@@ -1,14 +1,14 @@
 #include "shoppingwindow.h"
 #include "ui_shoppingwindow.h"
 
-ShoppingWindow::ShoppingWindow(QWidget *parent) :
+ShoppingWindow::ShoppingWindow(Database *DB, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ShoppingWindow)
 {
     ui->setupUi(this);
 
     //ui->category->setEditable(true);
-    DBshop = new Database();
+    DBshop = DB; //new Database();
     ui->category->addItem("категория продукта...");
     ui->category->addItems(*DBshop->getCategories());
     //delete DBshop;
@@ -24,9 +24,9 @@ ShoppingWindow::ShoppingWindow(QWidget *parent) :
 }
 
 ShoppingWindow::~ShoppingWindow() {
-    delete ui;
-    delete DBshop;
     delete productCompleter;
+    //delete DBshop;
+    delete ui;
 }
 
 bool ShoppingWindow::isFieldsEmpty() {
@@ -38,9 +38,13 @@ bool ShoppingWindow::isFieldsEmpty() {
     return false;
 }
 
+/*QPushButton *ShoppingWindow::getStatisticsButton() {
+    return ui->back;
+}*/
+
 void ShoppingWindow::on_back_clicked() {
     if (ui->purchase->toPlainText().isEmpty())
-        emit openMainWindow();
+        emit openStatisticsWindow();
     else
         QMessageBox::critical(this, "Ошибка", "Завершите покупку!");
 }
@@ -74,7 +78,8 @@ void ShoppingWindow::on_finish_clicked() {
             QMessageBox::critical(this, "Ошибка", "Ничего не добавлено!");
         } else {
             ui->purchase->clear();
-            emit openMainWindow();
+            //emit openStatisticsWindow();
+            QMessageBox::information(this, "Покупка", "Успешно!");
         }
     }
 }

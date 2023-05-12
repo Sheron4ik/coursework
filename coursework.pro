@@ -11,13 +11,13 @@ CONFIG += c++17
 SOURCES += \
     database.cpp \
     main.cpp \
-    mainwindow.cpp \
+#    mainwindow.cpp \
     shoppingwindow.cpp \
     statisticswindow.cpp
 
 HEADERS += \
     database.h \
-    mainwindow.h \
+#    mainwindow.h \
     shoppingwindow.h \
     statisticswindow.h
 

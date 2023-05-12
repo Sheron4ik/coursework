@@ -22,7 +22,7 @@
         <string notr="true"/>
        </property>
        <property name="text">
-        <string>Назад</string>
+        <string>К покупкам</string>
        </property>
       </widget>
      </item>
