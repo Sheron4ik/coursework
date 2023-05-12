@@ -33,4 +33,5 @@ private:
     StatisticsWindow *statisticsWindow;
     Database *DBmain;
 };
+
 #endif // MAINWINDOW_H

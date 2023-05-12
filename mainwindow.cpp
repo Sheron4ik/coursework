@@ -45,10 +45,10 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 
 MainWindow::~MainWindow() {
-    delete ui;
-    delete shoppingWindow;
     delete statisticsWindow;
+    delete shoppingWindow;
     delete DBmain;
+    delete ui;
     qDebug() << QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     //QFile::remove(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/dbPurchases");
 }
@@ -67,7 +67,7 @@ void MainWindow::on_buy_clicked() {
 }
 
 void MainWindow::on_statistics_clicked() {
-    statisticsWindow->showStatistic();
+    //statisticsWindow->showStatistic();
     statisticsWindow->show();
     this->setVisible(false);
 }
