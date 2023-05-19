@@ -22,7 +22,7 @@ HEADERS += \
     statisticswindow.h
 
 FORMS += \
-    mainwindow.ui \
+#    mainwindow.ui \
     shoppingwindow.ui \
     statisticswindow.ui
 

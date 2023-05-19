@@ -6,19 +6,17 @@ StatisticsWindow::StatisticsWindow(Database *DB, QWidget *parent) :
     ui(new Ui::StatisticsWindow)
 {
     ui->setupUi(this);
-    DBstatistic = DB; //new Database();
+    DBstatistic = DB;
+    date = QDate(QDate::currentDate().year(), QDate::currentDate().month(), 1);
 
     series = new QPieSeries();
-//TODO: legend sizes...
+
     chart = new QChart();
     chart->addSeries(series);
     chart->legend()->setAlignment(Qt::AlignLeft);
     chart->legend()->detachFromChart();
-    //chart->legend()->setInteractive(true);
     chart->legend()->setBackgroundVisible(false);
-    chart->legend()->setMaximumSize(350, 400);
-    chart->legend()->setGeometry(7, 285, 350, 400);
-    chart->legend()->update();
+    chart->legend()->setMaximumSize(1000, 1000);
     chart->setAnimationOptions(QChart::AllAnimations);
     chart->setBackgroundVisible(false);
 
@@ -30,7 +28,6 @@ StatisticsWindow::StatisticsWindow(Database *DB, QWidget *parent) :
 StatisticsWindow::~StatisticsWindow() {
     ui->graph->layout()->removeWidget(view);
     delete view;
-    //delete DBstatistic;
     delete ui;
 }
 
@@ -39,18 +36,15 @@ QPushButton *StatisticsWindow::getShoppingButton() {
 }
 
 void StatisticsWindow::showStatistic() {
-
     chart->removeSeries(series);
     delete series;
     series = new QPieSeries();
-    QHash<QString, double> info = DBstatistic->getPurchasesForStatistics();
-    qDebug() << "info map:";
-    for (auto [key, value] : info.asKeyValueRange()) {
-        series->append(key, value);
-        series->setName(key);
-        qDebug() << key << value << series->name();
+    QList<QPair<QString, double>> info = DBstatistic->getPurchasesForStatistics(date.toString("yyyy.MM.dd"));
+    for (const auto &data : info) {
+        series->append(data.first, data.second);
+        series->setName(data.first);
     }
-    series->setVerticalPosition(0.20);
+    series->setVerticalPosition(0.2);
     for (auto slice : series->slices()) {
         slice->setLabel(slice->label() + ' ' + QString::number(slice->value()) + " руб.");
         slice->setBrush(colors[currentColor++]);
@@ -61,16 +55,9 @@ void StatisticsWindow::showStatistic() {
     chart->addSeries(series);
     this->show();
 
-    /*//view->setRenderHint(QPainter::Antialiasing);
-    //view->setAlignment(Qt::AlignBottom);
-    //view->setSizePolicy(ui->graph->sizePolicy());
-    //view->fitInView(ui->graph->frameRect());
-    //view->setParent(ui->graph);*/
-
-    /*qDebug() << "chart " << chart->x() << chart->y() << chart->size() << chart->geometry();
-    qDebug() << "chart legend " << chart->legend()->x() << chart->legend()->y() << chart->legend()->size() << chart->legend()->geometry();
-    qDebug() << "graph " << ui->graph->x() << ui->graph->y() << ui->graph->size() << ui->graph->geometry();
-    qDebug() << "pieSize" << series->pieSize();*/
+    chart->legend()->setGeometry(7, chart->size().width()*series->pieSize()+ui->graph->y(),
+                                 chart->size().width()-13, chart->size().height()-(chart->size().width()*series->pieSize()+ui->graph->y())-7);
+    chart->legend()->update();
 }
 
 void StatisticsWindow::showCategoryStatistic(QPieSlice* seriesOfCategory) {
@@ -78,12 +65,10 @@ void StatisticsWindow::showCategoryStatistic(QPieSlice* seriesOfCategory) {
     chart->removeSeries(series);
     delete series;
     series = new QPieSeries();
-    QHash<QString, double> info = DBstatistic->getPurchasesForCategoryStatistic(nameOfCategory);
-    qDebug() << "info category map:";
-    for (auto [key, value] : info.asKeyValueRange()) {
-        series->append(key, value);
-        series->setName(key);
-        qDebug() << key << value << series->name();
+    QList<QPair<QString, double>> info = DBstatistic->getPurchasesForCategoryStatistic(nameOfCategory, date.toString("yyyy.MM.dd"));
+    for (const auto &data : info) {
+        series->append(data.first, data.second);
+        series->setName(data.first);
     }
     series->setVerticalPosition(0.20);
     for (auto slice : series->slices()) {
@@ -96,6 +81,13 @@ void StatisticsWindow::showCategoryStatistic(QPieSlice* seriesOfCategory) {
     chart->addSeries(series);
 }
 
-/*void StatisticsWindow::on_back_clicked() {
-    emit openMainWindow();
-}*/
+void StatisticsWindow::on_settings_currentTextChanged(const QString& setting) {
+    if (setting == "за день") {
+        date = QDate::currentDate();
+    } else if (setting == "за месяц") {
+        date = QDate(QDate::currentDate().year(), QDate::currentDate().month(), 1);
+    } else {
+        date = QDate(1900, 1, 1);
+    }
+    showStatistic();
+}

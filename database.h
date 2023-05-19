@@ -20,8 +20,8 @@ public:
     QStringList* getGoods(const QString& category);
     bool isCategoryEmpty();
     void getAllPurchases();
-    QHash<QString, double> getPurchasesForStatistics();
-    QHash<QString, double> getPurchasesForCategoryStatistic(const QString& category);
+    QList<QPair<QString, double>> getPurchasesForStatistics(const QString& date);
+    QList<QPair<QString, double>> getPurchasesForCategoryStatistic(const QString& category, const QString& date);
 };
 
 #endif // DATABASE_H

@@ -2,28 +2,19 @@
 
 Database::Database() {
     DB = QSqlDatabase::addDatabase("QSQLITE");
-    DB.setDatabaseName(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/dbPurchases");
-    if (!DB.open()) {
-        qDebug() << "ERROR connection: " << DB.lastError().text();
-    } else {
-        qDebug() << "SUCCESS connection";
-    }
+    DB.setDatabaseName(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/dbPurchases.db");
+    DB.open();
     QSqlQuery query(DB);
-    if (!query.exec("PRAGMA foreign_keys = ON")) {
-        qDebug() << "ERROR pragma: " << DB.lastError().text();
-    } else {
-        qDebug() << "SUCCESS pragma";
-    }
+    query.exec("PRAGMA foreign_keys = ON");
 }
 
 Database::~Database() {
     DB.close();
-    qDebug() << "SUCCESS closing";
 }
 
 void Database::createDB() {
     QSqlQuery query(DB);
-    if(!query.exec(
+    query.exec(
                     "CREATE TABLE IF NOT EXISTS Purchases ("
                     "   id_purchase INTEGER PRIMARY KEY,"
                     "   id_category INTEGER NOT NULL,"
@@ -33,32 +24,35 @@ void Database::createDB() {
                     "FOREIGN KEY (id_goods) REFERENCES Goods(id),"
                     "FOREIGN KEY (id_category) REFERENCES Category(id)"
                     ")"
-                )) {
-        qDebug() << "ERROR creation Purchases: " << DB.lastError().text();
-    } else {
-        qDebug() << "SUCCESS creation Purchases";
-    }
-    if(!query.exec(
+                );
+
+    query.exec(
                     "CREATE TABLE IF NOT EXISTS Category ("
                     "   id          INTEGER PRIMARY KEY,"
                     "   category    TEXT    UNIQUE"
                     ")"
-                )) {
-        qDebug() << "ERROR creation Category: " << DB.lastError().text();
-    } else {
-        qDebug() << "SUCCESS creation Category";
-    }
-    if(!query.exec(
+                );
+
+    query.exec(
                     "CREATE TABLE IF NOT EXISTS Goods ("
                     "   id          INTEGER PRIMARY KEY,"
                     "   goods       TEXT    UNIQUE,"
                     "   id_category INTEGER NOT NULL,"
                     "FOREIGN KEY (id_category) REFERENCES Category(id)"
                     ")"
-                )) {
-        qDebug() << "ERROR creation Goods: " << DB.lastError().text();
-    } else {
-        qDebug() << "SUCCESS creation Goods";
+                );
+
+    if (isCategoryEmpty()) {
+        addCategories({"Продукты", "Книги", "Аптеки", "Электроника", "Украшения", "Канцелярия", "Алкоголь"});
+        addGoods("Хлеб", 1);
+        addGoods("Война и Мир", 2);
+        addGoods("Аскорбинка", 3);
+        addGoods("Арпефлю", 3);
+        addGoods("Серьги", 5);
+        addGoods("Ручка", 6);
+        addGoods("Карандаш", 6);
+        addGoods("Ластик", 6);
+        addGoods("Жигулевское", 7);
     }
 }
 
@@ -69,11 +63,7 @@ void Database::addCategory(const QString& category) {
                     "   VALUES (:category)"
                 );
     query.bindValue(":category", category);
-    if (!query.exec()) {
-        qDebug() << "ERROR add category " << category << ": " << DB.lastError().text();
-    } else {
-        qDebug() << "SUCCESS add category " << category;
-    }
+    query.exec();
 }
 
 void Database::addGoods(const QString& goods, qulonglong idCategory) {
@@ -84,11 +74,7 @@ void Database::addGoods(const QString& goods, qulonglong idCategory) {
                 );
     query.bindValue(":goods", goods);
     query.bindValue(":idCategory", idCategory);
-    if (!query.exec()) {
-        qDebug() << "ERROR add goods " << goods << idCategory << ": " << DB.lastError().text();
-    } else {
-        qDebug() << "SUCCESS add goods " << goods << idCategory;
-    }
+    query.exec();
 }
 
 void Database::addPurchase(const QString& goods, const QString& category, const QString& date, const double price) {
@@ -101,17 +87,15 @@ void Database::addPurchase(const QString& goods, const QString& category, const 
     if (!idCategory) {
         addCategory(category);
         idCategory = this->getIDCategory(category);
+    }
+    if (!this->getIDGoods(goods, idCategory)) {
         addGoods(goods, idCategory);
     }
     query.bindValue(":id_category", idCategory);
     query.bindValue(":id_goods", this->getIDGoods(goods, idCategory));
     query.bindValue(":date", date);
     query.bindValue(":price", price);
-    if (!query.exec()) {
-        qDebug() << "ERROR add purchase " << goods << category << date << price << ": " << DB.lastError().text();
-    } else {
-        qDebug() << "SUCCESS add purchase " << goods << category << date << price;
-    }
+    query.exec();
 }
 
 void Database::addCategories(const QStringList& categories) {
@@ -130,7 +114,6 @@ qulonglong Database::getIDCategory(const QString& category) {
     query.exec();
     const int id = query.record().indexOf("id");
     query.next();
-    qDebug() << "!__ID category__!" << query.value(id).toULongLong();
     return query.value(id).toULongLong();
 }
 
@@ -152,14 +135,12 @@ qulonglong Database::getIDGoods(const QString& goods, qulonglong idCategory) {
 QStringList* Database::getCategories() {
     QSqlQuery query(DB);
     query.exec(
-                    "SELECT * FROM Category"
+                    "SELECT category FROM Category"
                 );
     QStringList *categories = new QStringList();
-    const int id = query.record().indexOf("id");
     const int category = query.record().indexOf("category");
     while (query.next()) {
         *categories << query.value(category).toString();
-        qDebug() << query.value(id).toUInt() << query.value(category).toString();
     }
     return categories;
 }
@@ -168,31 +149,20 @@ QStringList* Database::getGoods(const QString& category) {
     QSqlQuery query(DB);
     QStringList *goods = new QStringList();
     if (category.isEmpty()) {
-        if(!query.exec(
-                        "SELECT * FROM Goods"
-                    )) {
-            qDebug() << "ERROR select goods";
-        } else {
-            qDebug() << "SUCCESS select goods";
-        }
+        query.exec(
+                        "SELECT goods FROM Goods"
+                    );
     } else {
         query.prepare(
-                        "SELECT * FROM Goods"
+                        "SELECT goods FROM Goods"
                         "   WHERE (id_category = (:idCategory))"
                     );
         query.bindValue(":idCategory", this->getIDCategory(category));
-        if(!query.exec()) {
-            qDebug() << "ERROR select goods";
-        } else {
-            qDebug() << "SUCCESS select goods";
-        }
+        query.exec();
     }
-    const int id = query.record().indexOf("id");
     const int i_goods = query.record().indexOf("goods");
-    const int id_category = query.record().indexOf("id_category");
     while (query.next()) {
         *goods << query.value(i_goods).toString();
-        qDebug() << query.value(id).toUInt() << query.value(i_goods).toString() << query.value(id_category).toUInt();
     }
     return goods;
 }
@@ -221,64 +191,40 @@ void Database::getAllPurchases() {
     }
 }
 
-QHash<QString, double> Database::getPurchasesForStatistics() {
-    QHash<QString, double> ans;
+QList<QPair<QString, double>> Database::getPurchasesForStatistics(const QString& date) {
+    QList<QPair<QString, double>> ans;
     QSqlQuery query(DB);
-    if (!query.exec(
+    query.prepare(
                     "SELECT Category.category, SUM(Purchases.price) FROM Purchases, Category"
-                    "   WHERE (Category.id = Purchases.id_category)"
-                    "GROUP BY Purchases.id_category"
-                )) {
-        qDebug() << "ERROR select:" << DB.lastError().text();
-    } else {
-        qDebug() << "SUCCESS select";
-        while (query.next()) {
-            qDebug() << query.value(0).toString() << query.value(1).toDouble();
-            ans.insert(query.value(0).toString(), query.value(1).toDouble());
-        }
+                    "   WHERE (Category.id = Purchases.id_category) AND"
+                    "           ((:date) <= Purchases.date)"
+                    " GROUP BY Purchases.id_category"
+                    " ORDER BY SUM(Purchases.price) DESC"
+                );
+    query.bindValue(":date", date);
+    query.exec();
+    while (query.next()) {
+        ans.append(qMakePair(query.value(0).toString(), query.value(1).toDouble()));
     }
     return ans;
 }
 
-QHash<QString, double> Database::getPurchasesForCategoryStatistic(const QString& category) {
-    QHash<QString, double> ans;
+QList<QPair<QString, double>> Database::getPurchasesForCategoryStatistic(const QString& category, const QString& date) {
+    QList<QPair<QString, double>> ans;
     QSqlQuery query(DB);
     query.prepare(
                     "SELECT Goods.goods, SUM(Purchases.price) FROM Purchases, Goods"
                     "   WHERE (Goods.id = Purchases.id_goods) AND"
-                    "           (Purchases.id_category = (:idCategory))"
-                    "GROUP BY Purchases.id_goods"
+                    "           (Purchases.id_category = (:idCategory)) AND"
+                    "           ((:date) <= Purchases.date)"
+                    " GROUP BY Purchases.id_goods"
+                    " ORDER BY SUM(Purchases.price) DESC"
                 );
     query.bindValue(":idCategory", this->getIDCategory(category));
-    if (!query.exec()) {
-        qDebug() << "ERROR select:" << DB.lastError().text();
-    } else {
-        qDebug() << "SUCCESS select";
-        while (query.next()) {
-            qDebug() << query.value(0).toString() << query.value(1).toDouble();
-            ans.insert(query.value(0).toString(), query.value(1).toDouble());
-        }
+    query.bindValue(":date", date);
+    query.exec();
+    while (query.next()) {
+        ans.append(qMakePair(query.value(0).toString(), query.value(1).toDouble()));
     }
     return ans;
 }
-
-/*
-    "CREATE TABLE IF NOT EXISTS Purchases ("
-    "   id_purchase INTEGER PRIMARY KEY,"
-    "   id_category INTEGER NOT NULL,"
-    "   id_goods    INTEGER NOT NULL,"
-    "   date        DATE    NOT NULL,"
-    "   price       DECIMAL NOT NULL,"
-
-    "CREATE TABLE IF NOT EXISTS Category ("
-    "   id          INTEGER PRIMARY KEY,"
-    "   category    TEXT    UNIQUE"
-
-    "CREATE TABLE IF NOT EXISTS Goods ("
-    "   id          INTEGER PRIMARY KEY,"
-    "   goods       TEXT    UNIQUE,"
-    "   id_category INTEGER NOT NULL,"
-
-
-id, name_thing, id_cat
-*/

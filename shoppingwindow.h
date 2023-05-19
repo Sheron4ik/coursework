@@ -17,7 +17,6 @@ public:
     explicit ShoppingWindow(Database *DB, QWidget *parent = nullptr);
     ~ShoppingWindow();
     bool isFieldsEmpty();
-    //QPushButton *getStatisticsButton();
 
 signals:
     void openStatisticsWindow();
@@ -31,7 +30,6 @@ private slots:
 
 private:
     Ui::ShoppingWindow *ui;
-//    quint8 numberOfPurchases;
     Database *DBshop;
     QCompleter *productCompleter;
 };

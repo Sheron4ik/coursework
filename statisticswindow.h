@@ -17,16 +17,10 @@ public:
     ~StatisticsWindow();
     QPushButton *getShoppingButton();
 
-/*signals:
-    void openMainWindow();*/
-
-/*public slots:
-    void showStatistic();*/
-
 private slots:
-    //void on_back_clicked();
     void showStatistic();
     void showCategoryStatistic(QPieSlice* seriesOfCategory);
+    void on_settings_currentTextChanged(const QString& setting);
 
 private:
     Ui::StatisticsWindow *ui;
@@ -35,6 +29,8 @@ private:
     QPieSeries *series;
     QChart *chart;
     QChartView *view;
+
+    QDate date;
 
     Qt::GlobalColor colors[10] = {Qt::red, Qt::gray, Qt::magenta, Qt::darkCyan, Qt::green,
                                 Qt::darkMagenta, Qt::yellow, Qt::blue, Qt::cyan, Qt::black};

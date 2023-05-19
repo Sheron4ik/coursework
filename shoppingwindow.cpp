@@ -7,17 +7,13 @@ ShoppingWindow::ShoppingWindow(Database *DB, QWidget *parent) :
 {
     ui->setupUi(this);
 
-    //ui->category->setEditable(true);
-    DBshop = DB; //new Database();
+    DBshop = DB;
     ui->category->addItem("категория продукта...");
     ui->category->addItems(*DBshop->getCategories());
-    //delete DBshop;
 
     productCompleter = new QCompleter(*DBshop->getGoods(""), this);
     productCompleter->setCaseSensitivity(Qt::CaseInsensitive);
     ui->productName->setCompleter(productCompleter);
-
-    //ui->purchase->setReadOnly(true);
 
     connect(ui->price, SIGNAL(valueChanged(double)), this, SLOT(totalChanged()));
     connect(ui->quantity, SIGNAL(valueChanged(double)), this, SLOT(totalChanged()));
@@ -25,7 +21,6 @@ ShoppingWindow::ShoppingWindow(Database *DB, QWidget *parent) :
 
 ShoppingWindow::~ShoppingWindow() {
     delete productCompleter;
-    //delete DBshop;
     delete ui;
 }
 
@@ -37,10 +32,6 @@ bool ShoppingWindow::isFieldsEmpty() {
         return true;
     return false;
 }
-
-/*QPushButton *ShoppingWindow::getStatisticsButton() {
-    return ui->back;
-}*/
 
 void ShoppingWindow::on_back_clicked() {
     if (ui->purchase->toPlainText().isEmpty())
@@ -64,9 +55,9 @@ void ShoppingWindow::on_add_clicked() {
             ui->category->addItem("категория продукта...");
             ui->category->addItems(*DBshop->getCategories());
             delete productCompleter;
-            productCompleter = new QCompleter(*DBshop->getGoods(""), ui->productName);
+            productCompleter = new QCompleter(*DBshop->getGoods(""), this);
             productCompleter->setCaseSensitivity(Qt::CaseInsensitive);
-            //ui->productName->setCompleter(productCompleter);
+            ui->productName->setCompleter(productCompleter);
         }
     }
 }
@@ -78,8 +69,7 @@ void ShoppingWindow::on_finish_clicked() {
             QMessageBox::critical(this, "Ошибка", "Ничего не добавлено!");
         } else {
             ui->purchase->clear();
-            //emit openStatisticsWindow();
-            QMessageBox::information(this, "Покупка", "Успешно!");
+            emit openStatisticsWindow();
         }
     }
 }
